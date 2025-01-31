@@ -17,6 +17,9 @@ button{
         transition: 0.2s;
     }
 }
+button.close{
+    margin: 0;
+}
 input{
     border: solid 1px black;
     border-radius: 10px;
@@ -28,4 +31,39 @@ input{
     &:focus{
         outline: 1px solid black;
     }
+}
+form.auth{
+    display: none;
+}
+form.reg{
+    display: flex;
+}
+
+/* Стиль для экрана, который будет фоном под задачей */
+.screen {
+	position: absolute; /* Используем absolute для выравнивания фона */
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.25); /* Прозрачный черный фон */
+	z-index: 999; /* Фон будет находиться под модальным окном */
+	backdrop-filter: blur(3px);
+	-webkit-backdrop-filter: blur(3px);
+    display: none;
+    opacity: 0;
+}
+
+/* Стиль для самого модального окна */
+.modal-window{
+	background-color: white;
+	border: 1px solid rgba(200, 200, 200, 0.25);
+	filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.09));
+	padding: 20px;
+	border-radius: 25px;
+	width: auto; /* Вы можете изменить размер в зависимости от ваших предпочтений */
+	display: none;
+    opacity: 0;
+	flex-direction: column;
+	align-items: center; /* Центрирует элементы по горизонтали */
+    transform: translateY(-125px);
+	z-index: 1001; /* Модальное окно должно быть выше фона */
 }

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 #User 
 class UserBase(BaseModel):
     name: str
-    age: int
+    password: str
 
 class UserCreate(UserBase):
     pass
@@ -13,22 +13,6 @@ class User(UserBase):
     class Config:
         orm_mode = True
     
-
-#Post
-class PostBase(BaseModel):
-    title: str
-    body: str
-    author_id: int
-
-class PostCreate(PostBase):
-    pass
-
-class Post(PostBase):
-    id: int 
-    author: User
-    class Config:
-        orm_mode = True
-
 
 
 # Здесь описаны различные схемы,

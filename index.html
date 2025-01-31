@@ -8,25 +8,51 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="screen"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <div class="modal-window">
+                    <p id="result"></p>
+                    <button onclick="close()" class="close text-uppercase">закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-3 d-flex flex-column">
-                <h2 class="text-center">Добавить пользователя</h2>
+            <div class="col-3">
+                <form class="reg flex-column">
+                    <h2 class="text-center">Регистрация</h2>
     
-                <label for="name">Имя:</label>
-                <input type="text" id="name" placeholder="Введите имя">
-                
-                <label for="age">Возраст:</label>
-                <input type="number" id="age" placeholder="Введите возраст">
-                
-                <button onclick="addUser()">Добавить</button>
-                
-                <p id="result"></p>
+                    <label for="name" class="text-center">Имя пользователя</label>
+                    <input type="text" id="name" placeholder="Введите имя пользователя">
+                    
+                    <label for="password" class="text-center">Пароль</label>
+                    <input type="password" id="password" placeholder="Введите пароль">
+
+                    <label for="confirmPassword" class="text-center">Повторите пароль</label>
+                    <input type="password" id="confirmPassword" placeholder="Введите пароль повторно">
+                    
+                    <button onclick="addUser()" onclick="show()">Зарегестрироваться</button>
+                </form>
+                <form class="auth flex-column">
+                    <h2 class="text-center">Авторизация</h2>
+    
+                    <label for="name">UserName</label>
+                    <input type="text" id="name" placeholder="Введите имя пользователя">
+                    
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Введите пароль">
+                    
+                    <button onclick="checkUser()" onclick="show()">Войти</button>
+                </form>
             </div>
         </div>
     </div>
    
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/regScript.js"></script>
+    <script src="js/authScript.js"></script>
 </body>
 </html>

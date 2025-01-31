@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException, Path, Query, Body, Depends
 from typing import Optional, List, Dict, Annotated
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext # библиотека для ХЕША паролей 
 
 #импорт наших классов
-from models import Base, User, Post
-from database import engine, session_local
-from schemas import UserCreate, User as DbUser, PostCreate, Post as DbPost # "as" создает песевдоним для того что бы названия не конфликтовали 
+from .models import Base, User
+from .database import engine, session_local
+from .schemas import UserCreate, User as DbUser # "as" создает песевдоним для того что бы названия не конфликтовали 
 
 
 app = FastAPI()
@@ -25,6 +26,15 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") #Настройка контекста для bcrypt
+
+
+# функция ХЕШИРОВАНИЯ 
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+
 # функция создает сессию для подключения к ДБ
 def get_db():
     db = session_local()
@@ -36,25 +46,18 @@ def get_db():
 
 @app.post("/users/", response_model=DbUser) # response_model=DbUser указывает, что ответ на запрос будет соответствовать модели DbUser(User)
 async def create_user(user: UserCreate, db: Session = Depends(get_db)) -> DbUser:     
-    db_user = User(name=user.name, age=user.age)
+    
+    # Хешируем пароль
+    hashed_password = hash_password(user.password)
+    
+    # Создаем пользователя с хешированным паролем
+    db_user = User(name=user.name, password=hashed_password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
     return db_user
 
-@app.post("/posts/", response_model=DbPost)
-async def create_post(post: PostCreate, db: Session = Depends(get_db)) -> DbPost:     
-    db_user = db.query(User).filter(User.id == post.author_id).first()
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    db_post = Post(title=post.title, body=post.body, author_id=post.author_id)
-    db.add(db_post)
-    db.commit()
-    db.refresh(db_post)
-
-    return db_post
     
 
 # Вывод всех данных
@@ -62,9 +65,6 @@ async def create_post(post: PostCreate, db: Session = Depends(get_db)) -> DbPost
 async def users(db: Session = Depends(get_db)):
     return db.query(User).all()
 
-@app.get("/posts/", response_model=List[DbPost])
-async def posts(db: Session = Depends(get_db)):
-    return db.query(Post).all()
 
 
 # Самостоятельная работа, я захотел попробовать сделать вывод конкретных пользователей и постов по id
@@ -75,9 +75,4 @@ async def get_user(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.get("/post/{id}", response_model=DbPost)
-async def get_post(id: int, db: Session = Depends(get_db)):
-    post = db.query(Post).filter(Post.id == id).first()
-    if post is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return post
+
