@@ -30,6 +30,16 @@ function closeModal() {
     }
 }
 
+async function checkUserExists(name) {
+    try {
+        let response = await fetch(`http://127.0.0.1:8000/users/${name}`);
+        return response.ok; // true, если пользователь найден
+    } catch (error) {
+        console.error("Ошибка запроса:", error);
+        return false;
+    }
+}
+
 async function addUser() {
     let name = document.getElementById("name").value;
     let password = document.getElementById("password").value;
@@ -40,15 +50,17 @@ async function addUser() {
         resultText.innerText = "Заполните все поля!";
         showModal();
         return;
-    } 
-    
+    }
     if (password !== confirmPassword) {
         resultText.innerText = "Пароли не совпадают!";
         showModal();
         return;
     }
-
-    // Если валидация прошла, показываем модальное окно с успешным сообщением
+    if (await checkUserExists(name)) {
+        resultText.innerText = "Пользователь уже существует!";
+        showModal();
+        return;
+    }
     resultText.innerText = "Все данные заполнены верно.";
     showModal();
 

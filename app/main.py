@@ -45,7 +45,11 @@ def get_db():
 
 
 @app.post("/users/", response_model=DbUser) # response_model=DbUser указывает, что ответ на запрос будет соответствовать модели DbUser(User)
-async def create_user(user: UserCreate, db: Session = Depends(get_db)) -> DbUser:     
+async def create_user(user: UserCreate, db: Session = Depends(get_db)) -> DbUser:   
+     # Проверяем, есть ли уже пользователь с таким именем
+    existing_user = db.query(User).filter(User.name == user.name).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Пользователь уже существует")  
     
     # Хешируем пароль
     hashed_password = hash_password(user.password)
@@ -58,7 +62,15 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)) -> DbUser
 
     return db_user
 
-    
+# Дополнительный маршрут, который будет проверять, существует ли пользователь
+# Этот эндпоинт вернет {"exists": True}, если пользователь есть, и 404, если его нет.
+@app.get("/users/{name}")
+async def check_user(name: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.name == name).first()
+    if user:
+        return {"exists": True}
+    raise HTTPException(status_code=404, detail="Пользователь не найден")
+
 
 # Вывод всех данных
 @app.get("/users/", response_model=List[DbUser])
