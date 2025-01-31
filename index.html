@@ -14,7 +14,7 @@
             <div class="col-12 d-flex justify-content-center">
                 <div class="modal-window">
                     <p id="result"></p>
-                    <button onclick="close()" class="close text-uppercase">закрыть</button>
+                    <button onclick="closeModal()" class="close text-uppercase">закрыть</button>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-3">
-                <form class="reg flex-column">
+                <div class="reg flex-column">
                     <h2 class="text-center">Регистрация</h2>
     
                     <label for="name" class="text-center">Имя пользователя</label>
@@ -34,9 +34,9 @@
                     <label for="confirmPassword" class="text-center">Повторите пароль</label>
                     <input type="password" id="confirmPassword" placeholder="Введите пароль повторно">
                     
-                    <button onclick="addUser()" onclick="show()">Зарегестрироваться</button>
-                </form>
-                <form class="auth flex-column">
+                    <button onclick="addUser()">Зарегестрироваться</button>
+                </div>
+                <div class="auth flex-column">
                     <h2 class="text-center">Авторизация</h2>
     
                     <label for="name">UserName</label>
@@ -45,14 +45,13 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="Введите пароль">
                     
-                    <button onclick="checkUser()" onclick="show()">Войти</button>
-                </form>
+                    <button onclick="checkUser()">Войти</button>
+                </div>
             </div>
         </div>
     </div>
    
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/regScript.js"></script>
-    <script src="js/authScript.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

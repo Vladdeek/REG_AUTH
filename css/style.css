@@ -32,10 +32,10 @@ input{
         outline: 1px solid black;
     }
 }
-form.auth{
+.auth{
     display: none;
 }
-form.reg{
+.reg{
     display: flex;
 }
 
@@ -54,6 +54,7 @@ form.reg{
 
 /* Стиль для самого модального окна */
 .modal-window{
+    position: fixed;
 	background-color: white;
 	border: 1px solid rgba(200, 200, 200, 0.25);
 	filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.09));
