@@ -33,19 +33,23 @@
 
                     <label for="confirmPassword" class="text-center">Повторите пароль</label>
                     <input type="password" id="confirmPassword" placeholder="Введите пароль повторно">
+
+                    <p onclick="toggleForm()" class="toggle-link text-center">У меня уже есть аккаунт</p>
                     
                     <button onclick="addUser()">Зарегестрироваться</button>
                 </div>
                 <div class="auth flex-column">
                     <h2 class="text-center">Авторизация</h2>
     
-                    <label for="name">UserName</label>
-                    <input type="text" id="name" placeholder="Введите имя пользователя">
+                    <label for="name">Имя пользователя</label>
+                    <input type="text" id="authname" placeholder="Введите имя пользователя">
                     
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Введите пароль">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="authpassword" placeholder="Введите пароль">
+
+                    <p onclick="toggleForm()" class="toggle-link text-center">Создать аккаунт</p>
                     
-                    <button onclick="checkUser()">Войти</button>
+                    <button onclick="authUser()">Войти</button>
                 </div>
             </div>
         </div>

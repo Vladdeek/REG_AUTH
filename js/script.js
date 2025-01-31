@@ -1,3 +1,19 @@
+let reg = document.querySelector('.reg');
+let auth = document.querySelector('.auth');
+
+reg.style.display = 'flex';
+
+function toggleForm() {
+    if (reg.style.display === 'flex') {
+        reg.style.display = 'none';
+        auth.style.display = 'flex';
+    } else {
+        reg.style.display = 'flex';
+        auth.style.display = 'none';
+    }
+}
+
+
 function showModal() {
     const modalWindow = document.querySelector('.modal-window'); // Берём первый найденный элемент
     const screen = document.querySelector('.screen'); // Берём экран
@@ -89,4 +105,36 @@ async function addUser() {
             alert("Ошибка соединения с сервером");
         }
     };
+}
+
+async function authUser() {
+    let authname = document.getElementById("authname").value;
+    let authpassword = document.getElementById("authpassword").value;
+    let resultText = document.getElementById("result");
+
+    if (!authname || !authpassword) {
+        resultText.innerText = "Заполните все поля!";
+        showModal();
+        return;
+    }
+
+    try {
+        let response = await fetch("http://127.0.0.1:8000/auth/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: authname, password: authpassword })
+        });
+
+        let data = await response.json(); 
+        console.log("Ответ сервера:", data); // Проверяем, что пришло от сервера
+
+        if (response.ok) {
+            alert("Добро пожаловать, " + data.user);
+        } else {
+            alert("Ошибка: " + data.detail);
+        }
+    } catch (error) {
+        console.error("Ошибка запроса:", error);
+        alert("Ошибка соединения с сервером");
+    }
 }

@@ -68,3 +68,10 @@ input{
     transform: translateY(-125px);
 	z-index: 1001; /* Модальное окно должно быть выше фона */
 }
+
+.toggle-link{
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}

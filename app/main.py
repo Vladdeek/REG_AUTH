@@ -33,6 +33,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") #Настро�
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
+# Функция для проверки пароля
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
 
 
 # функция создает сессию для подключения к ДБ
@@ -62,6 +66,7 @@ async def create_user(user: UserCreate, db: Session = Depends(get_db)) -> DbUser
 
     return db_user
 
+
 # Дополнительный маршрут, который будет проверять, существует ли пользователь
 # Этот эндпоинт вернет {"exists": True}, если пользователь есть, и 404, если его нет.
 @app.get("/users/{name}")
@@ -72,19 +77,21 @@ async def check_user(name: str, db: Session = Depends(get_db)):
     raise HTTPException(status_code=404, detail="Пользователь не найден")
 
 
+# Эндпоинт авторизации
+@app.post("/auth/")
+async def auth_user(user: UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.name == user.name).first()
+
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
+
+    if not verify_password(user.password, db_user.password):
+        raise HTTPException(status_code=401, detail="Неверный пароль")
+
+    return {"message": "Успешный вход", "user": db_user.name}
+
+
 # Вывод всех данных
 @app.get("/users/", response_model=List[DbUser])
 async def users(db: Session = Depends(get_db)):
     return db.query(User).all()
-
-
-
-# Самостоятельная работа, я захотел попробовать сделать вывод конкретных пользователей и постов по id
-@app.get("/user/{id}", response_model=DbUser)
-async def get_user(id: int, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == id).first()
-    if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
-
-
